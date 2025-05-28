@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+aligned_structures/
+rmsd_*.csv
+info.txt
+*.pse
+*.pdb
+data/
