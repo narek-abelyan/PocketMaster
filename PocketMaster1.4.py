@@ -17,6 +17,11 @@ def compute_rmsd(sel1, sel2, method="super"):
         return None, f"Слишком разное количество атомов: {n1} vs {n2}"
 
     try:
+        if method in ["rms", "rms_cur"] and n1 != n2:
+            msg = f"⚠️ Метод {method} требует равное количество атомов: {n1} vs {n2}"
+            print(msg)
+            return None, msg
+
         if method == "align":
             rmsd = cmd.align(sel1, sel2)[0]
         elif method == "super":
@@ -27,29 +32,64 @@ def compute_rmsd(sel1, sel2, method="super"):
             rmsd = cmd.rms_cur(sel1, sel2)
         else:
             raise ValueError(f"Неизвестный метод RMSD: {method}")
+
         return rmsd, f"Метод: {method}, атомов: {n1} vs {n2}"
+
+    except Exception as e:
+        print(f"❌ Ошибка при расчёте RMSD методом {method} между {sel1} и {sel2}: {e}")
+        return None, f"{e} | Метод: {method}, атомов: {n1} vs {n2}"
+
     except Exception as e:
         print(f"❌ Ошибка при расчёте RMSD методом {method} между {sel1} и {sel2}: {e}")
         return None, f"{e} | Метод: {method}, атомов: {n1} vs {n2}"
 
 
-print(f"Текущая рабочая директория: {os.getcwd()}")
+# print(f"Текущая рабочая директория: {os.getcwd()}")
+
+def print_directory_contents_pretty(path, columns=3):
+    items = sorted(os.listdir(path))
+    print(f"\n Рабочая директория: {path}\n")
+
+    # Добавляем иконки и сортируем
+    pretty_items = []
+    for name in items:
+        full_path = os.path.join(path, name)
+        if os.path.isdir(full_path):
+            pretty_items.append(f"[#] {name}")
+        else:
+            pretty_items.append(f"[*] {name}")
+
+    # Печатаем в 3 колонки
+    print(" Содержимое директории:\n")
+    for i in range(0, len(pretty_items), columns):
+        row = pretty_items[i:i+columns]
+        print("   ".join(f"{x:<40}" for x in row))  # <40 — выравнивание по ширине
+
+# Использование
+print_directory_contents_pretty(os.getcwd())
 
 # Очистка среды
 cmd.reinitialize()
 
 # --- Ввод пользователя ---
-folder_path = input("Введи путь к папке с PDB файлами (по умолчанию текущая): ").strip()
+folder_path = input("\nВведи путь к папке с PDB файлами (по умолчанию текущая): ").strip()
 if not folder_path:
     folder_path = os.getcwd()
 files = [f for f in os.listdir(folder_path) if f.endswith('.pdb')]
 files.sort()
 
-print("Доступные PDB файлы:")
+print("\nДоступные PDB файлы:")
 for i, f in enumerate(files, 1):
     print(f"{i}. {f}")
 
-ref_index = int(input("Введи номер референсного файла: ")) - 1
+
+# --- Выбор двух референсных структур ---
+print("\nВыберите референсную структуру для определения кармана:")
+ref_index = int(input("Номер PDB-файла (карман): ")) - 1
+
+
+print("\nВыберите референсную структуру для выравнивания:")
+ref_align_index = int(input("Номер PDB-файла (выравнивание): ")) - 1
 
 # --- Загрузка всех структур ---
 names = []
@@ -64,11 +104,11 @@ het_atoms = cmd.get_model(f"{ref_name} and not polymer and not solvent").atom
 het_residues = sorted({(a.resn, a.resi, a.chain) for a in het_atoms}, key=lambda x: (int(x[1]), x[2]))
 
 if het_residues:
-    print(f" Обнаружены HET-группы в структуре {ref_name}:")
+    print(f" \nОбнаружены HET-группы в структуре {ref_name}:")
     for resn, resi, chain in het_residues:
         print(f"  - {resn:>3} {resi:>4} {chain}")
 else:
-    print(f" В структуре {ref_name} не обнаружено HET-групп.")
+    print(f"\nВ структуре {ref_name} не обнаружено HET-групп.")
 
 # Выбор метода задания кармана
 print(f"\nВыбери способ задания кармана:")
@@ -85,7 +125,7 @@ chain_id = ""
 
 if pocket_method == "1":
     while True:
-        ligand_input = input("Введи номер остатка и chain ID через пробел, например '40 A': ").strip()
+        ligand_input = input("\nВведи номер остатка и chain ID через пробел, например '40 A': ").strip()
         parts = ligand_input.split()
         if len(parts) != 2:
             print("Ошибка: нужно ввести номер остатка и chain ID через пробел, например '40 A'. Попробуй ещё раз.")
@@ -99,17 +139,17 @@ if pocket_method == "1":
         break
 
     try:
-        radius = float(input("Введи радиус для кармана (в Å, по умолчанию 7): ").strip())
+        radius = float(input("\nВведи радиус для кармана (в Å, по умолчанию 7): ").strip())
     except ValueError:
         radius = 7.0
 
 elif pocket_method == "2":
-    resi_chain_input = input("Введи список остатков в формате (resn resi chain), например: PRO 46 A, ASN 61 A: ").strip()
+    resi_chain_input = input("\nВведи список остатков в формате (resn resi chain), например: PRO 46 A, ASN 61 A: ").strip()
 elif pocket_method == "3":
-    chain_id = input("Введи идентификатор цепи (chain ID), например: A: ").strip().upper()
+    chain_id = input("\nВведи идентификатор цепи (chain ID), например: A: ").strip().upper()
 
 # Выбор режима сравнения
-print("Выбери режим сравнения:")
+print("\nВыбери режим сравнения:")
 print("1 - Все со всеми (all vs all)")
 print("2 - Все с референсом (all vs ref) ")
 comparison_mode = input("Введи режим (1 или 2): ").strip()
@@ -139,7 +179,6 @@ print("-" * 30 + "\n")
 
 
 # --- Получение кармана ---
-ref_name = names[ref_index]
 
 if pocket_method == "1":
 
@@ -197,6 +236,7 @@ color gray80, rest_protein
 '''
 print("\nКоманды PyMOL для красивой визуализации кармана:\n")
 print(vis_code.strip())
+print(" \n ")
 
 # --- Создание селекций карманов и Cα ---
 for name in names:
@@ -207,22 +247,24 @@ for name in names:
     cmd.select(f"pocketCA_{name}", ca_sel)
 
 # --- Выравнивание всех по референсу ---
-ref_ca = f"pocketCA_{ref_name}"
-os.makedirs("aligned_structures", exist_ok=True)
+ref_align_name = names[ref_align_index]
+ref_ca = f"pocketCA_{ref_align_name}"
+os.makedirs(f"{folder_path}/aligned_output", exist_ok=True)
+os.makedirs(f"{folder_path}/aligned_output/aligned_structures", exist_ok=True)
 
 failed_align = []  # список для белков, которые не выровнялись
 
 for name in names:
-    if name == ref_name:
+    if name == ref_align_name:
         continue
     moving_ca = f"pocketCA_{name}"
     try:
         cmd.align(moving_ca, ref_ca)
-        aligned_path = os.path.join("aligned_structures", f"{name}_aligned_to_{ref_name}.pdb")
+        aligned_path = os.path.join(f"{folder_path}/aligned_output/aligned_structures", f"{name}_aligned_to_{ref_align_name}.pdb")
         cmd.save(aligned_path, name)
         print(f"✅ {name} сохранён как {aligned_path}")
     except:
-        print(f"❌ Не удалось выровнять {name} по {ref_name}")
+        print(f"❌ Не удалось выровнять {name} по {ref_align_name}")
         failed_align.append(name)  # Добавляем в список неудач
 
 
@@ -254,11 +296,11 @@ if comparison_mode == "1":
 elif comparison_mode == "2":
     # Все с референсом
     for name in names:
-        if name == ref_name:
+        if name == ref_align_name:
             continue
-        sel1_all = f"pocket_{ref_name}"
+        sel1_all = f"pocket_{ref_align_name}"
         sel2_all = f"pocket_{name}"
-        sel1_ca = f"pocketCA_{ref_name}"
+        sel1_ca = f"pocketCA_{ref_align_name}"
         sel2_ca = f"pocketCA_{name}"
 
         rms_all, reason_all = compute_rmsd(sel1_all, sel2_all, rmsd_method)
@@ -268,32 +310,34 @@ elif comparison_mode == "2":
         rms_all_s = f"{rms_all:.5f}" if rms_all is not None else ""
         rms_ca_s = f"{rms_ca:.5f}" if rms_ca is not None else ""
 
-        rmsd_all.append((ref_name, name, rms_all_s, reason_all))
-        rmsd_ca.append((ref_name, name, rms_ca_s, reason_ca))
+        rmsd_all.append((ref_align_name, name, rms_all_s, reason_all))
+        rmsd_ca.append((ref_align_name, name, rms_ca_s, reason_ca))
 else:
     raise ValueError("Неверный режим сравнения.")
 
 
 # --- Сохранение RMSD ---
-with open("rmsd_all_atoms.csv", "w", newline='', encoding="utf-8-sig") as f:
+with open(f"{folder_path}/aligned_output/rmsd_all_atoms.csv", "w", newline='', encoding="utf-8-sig") as f:
     writer = csv.writer(f)
     writer.writerow(["Protein1", "Protein2", "RMSD_all_atoms", "Comment"])
     writer.writerows(rmsd_all)
 
-with open("rmsd_calpha.csv", "w", newline='', encoding="utf-8-sig") as f:
+with open(f"{folder_path}/aligned_output/rmsd_calpha.csv", "w", newline='', encoding="utf-8-sig") as f:
     writer = csv.writer(f)
     writer.writerow(["Protein1", "Protein2", "RMSD_Calpha", "Comment"])
     writer.writerows(rmsd_ca)
 
 # --- Сохранение информации о карманах ---
-with open("info.txt", "w", encoding="utf-8-sig") as info_file:
-    info_file.write(f"Референсная структура: {ref_name}\n")
+with open(f"{folder_path}/aligned_output/info.txt", "w", encoding="utf-8-sig") as info_file:
+    info_file.write(f"Структура для выравнивания: {ref_align_name}\n")
     if pocket_method == "1":
         info_file.write(f"Метод определения кармана: Радиальное (радиус {radius} Å от остатка {ligand_resi} {ligand_chain})\n")
     elif pocket_method == "2":
         info_file.write(f"Метод определения кармана: вручную (введённый список остатков)\n")
     elif pocket_method == "3":
         info_file.write(f"Метод определения кармана: по цепи {chain_id}\n")
+    
+    info_file.write(f"метод расчёта RMSD: {rmsd_method}\n")
 
     if failed_align:
         info_file.write("\nБелки, которые не удалось выровнять:\n")
@@ -312,16 +356,16 @@ with open("info.txt", "w", encoding="utf-8-sig") as info_file:
         info_file.write("  " + ', '.join(residue_lines) + "\n\n")
 
     # --- Сравнение карманов с референсом ---
-    info_file.write("\nСравнение карманов с референсной структурой:\n")
+    info_file.write("\nСравнение карманов с референсной структурой:\n\n")
     
     # Формируем словарь для референса: (resi, chain) → resn
     ref_residues = {
         (atom.resi, atom.chain): atom.resn
-        for atom in cmd.get_model(f"pocket_{ref_name}").atom
+        for atom in cmd.get_model(f"pocket_{ref_align_name}").atom
     }
     
     for name in names:
-        if name == ref_name:
+        if name == ref_align_name:
             continue
         target_atoms = cmd.get_model(f"pocket_{name}").atom
         target_residues = {
@@ -391,16 +435,17 @@ if plt and sns:
 
         plt.grid(True, linestyle='--', alpha=0.7)
         plt.tight_layout()
-        plt.savefig(filename, dpi=300)
+        plt.savefig(f"{folder_path}/aligned_output/{filename}", dpi=300)
         plt.close()
         print(f"Гистограмма сохранена: {filename}")
 
     plot_rmsd_histogram(rmsd_all, "Гистограмма RMSD (все атомы)", "rmsd_all_atoms_hist.png")
     plot_rmsd_histogram(rmsd_ca, "Гистограмма RMSD (Cα)", "rmsd_calpha_hist.png")
 
-    
 print("\n✅ Готово. Файлы сохранены:")
+print("-----------------------------")
+print(f"{folder_path}/aligned_output/")
 print("- RMSD по всем атомам: rmsd_all_atoms.csv")
 print("- RMSD по Cα: rmsd_calpha.csv")
 print("- Остатки карманов (resn resi chain): info.txt")
-print("- Выровненные структуры: папка aligned_structures/")
+print("- Выровненные структуры: папка aligned_structures/\n")
