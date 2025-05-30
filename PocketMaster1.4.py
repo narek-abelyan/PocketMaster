@@ -39,13 +39,6 @@ def compute_rmsd(sel1, sel2, method="super"):
         print(f"❌ Ошибка при расчёте RMSD методом {method} между {sel1} и {sel2}: {e}")
         return None, f"{e} | Метод: {method}, атомов: {n1} vs {n2}"
 
-    except Exception as e:
-        print(f"❌ Ошибка при расчёте RMSD методом {method} между {sel1} и {sel2}: {e}")
-        return None, f"{e} | Метод: {method}, атомов: {n1} vs {n2}"
-
-
-# print(f"Текущая рабочая директория: {os.getcwd()}")
-
 def print_directory_contents_pretty(path, columns=3):
     items = sorted(os.listdir(path))
     print(f"\n Рабочая директория: {path}\n")
