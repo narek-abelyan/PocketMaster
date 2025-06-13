@@ -215,7 +215,6 @@ else:
 names = []
 for f in files:
     name = os.path.splitext(f)[0]
-    print("name -->", name)
     names.append(name)
     cmd.load(os.path.join(folder_path, f), name)
 

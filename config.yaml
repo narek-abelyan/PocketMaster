@@ -1,6 +1,6 @@
 # Основные параметры
-folder_path: "/home/nikola/Desktop/narek/new_proj/PocketMaster/data/family_set_2025/files/A9JQL9"
-save_dir: "/home/nikola/Desktop/narek/new_proj/PocketMaster/data/family_set_2025/files/A9JQL9/yohoool"
+folder_path: "./examples"
+save_dir: "./proc_out"
 
 # Очистка
 do_preprocess: "1"    # Провести предварительную очистку структур? (1 - да, 0 - нет)
@@ -42,7 +42,7 @@ rmsd_method: 2        # Выбери метод расчёта RMSD:
                       # 4 - rms_cur (Быстрее, приближённое RMSD, тоже требует полное соответствие)
 
 # Кластеризация
-linkage_method: 2     # Выбери метод иерархической кластеризации:
+linkage_method: 4     # Выбери метод иерархической кластеризации:
                       # 1 - ward (минимизация внутрикластерной дисперсии, требует евклидово расстояние)
                       # 2 - single (минимальное расстояние между кластерами)
                       # 3 - complete (максимальное расстояние между кластерами)
