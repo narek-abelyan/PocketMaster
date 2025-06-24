@@ -1,0 +1,14 @@
+name: pmaster
+channels:
+  - conda-forge
+  - schrodinger
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - pyyaml
+  - requests
+  - scipy
+  - pymol

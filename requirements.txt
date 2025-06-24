@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+seaborn
+pyyaml
+requests
+scipy
+# PyMOL не устанавливается через pip, см. https://pymol.org/2/
+# Установи PyMOL отдельно: conda install -c schrodinger pymol
