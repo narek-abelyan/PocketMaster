@@ -26,8 +26,9 @@ With PocketMaster, you can quickly analyze the similarity of protein binding sit
 
 <p float="left">
   <img src="images/rmsd_heatmap.png" height="280" />
-  <img src="images/rmsd_all_atoms_hist.png" height="220" />
-  <img src="images/RMSD_dendrogram_average.png" height="220" />
+  <img src="images/ghg.png" height="280" />
+  <img src="images/rmsd_all_atoms_hist.png" height="217" />
+  <img src="images/RMSD_dendrogram_average.png" height="217" />
 </p>
 
 **Pocket comparison visualizations:** `heatmap.png`, `rmsd_all_atoms_hist.png`, `dendrogram.png`
@@ -290,8 +291,9 @@ PocketMaster - удобный инструмент для анализа схо�
 
 <p float="left">
   <img src="images/rmsd_heatmap.png" height="280" />
-  <img src="images/rmsd_all_atoms_hist.png" height="215" />
-  <img src="images/RMSD_dendrogram_average.png" height="215" />
+  <img src="images/ghg.png" height="280" />
+  <img src="images/rmsd_all_atoms_hist.png" height="217" />
+  <img src="images/RMSD_dendrogram_average.png" height="217" />
 </p>
 
 **Сравнение карманов:** heatmap.png, rmsd_all_atoms_hist.png, dendrogram.png
