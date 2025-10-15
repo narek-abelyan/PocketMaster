@@ -14,7 +14,7 @@ PocketMaster is a flexible and automated tool for analyzing, clustering, and vis
 * ✅ **RMSD calculation across all atoms or only Cα atoms within the binding sites**
 * ✅ **Creation of clear visualizations: heatmaps, dendrograms, histograms**
 * ✅ **Saving of aligned structures** and analysis results
-* ✅ **Generation of summary reports with structural and sequence differences of binding sites
+* ✅ **Generation of summary reports with structural and sequence differences of binding sites**
 * ✅ **Choice of clustering linkage methods:** `ward`, `single`, `complete`, `average`, `centroid`, `median`, `weighted`
 * ✅ **Customizable clustering options: by number of clusters (maxclust), by distance threshold (distance), or automatic modes (Elbow method, 70% of maximum linkage distance threshold)**
 
