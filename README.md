@@ -130,7 +130,7 @@ to enter interactive mode and set the parameters manually.
 
 🔹 **Select the appropriate structure preprocessing options:**  
   1 – Remove water (solvent)  
-  2 – Remove ions (Cu, CL, etc.)  
+  2 – Remove ions (Mg²⁺, Cl⁻, etc.)  
   3 – Remove sulfates and phosphates (SO4, PO4, etc.)  
   4 – Remove buffer components (TRS, MES, HEP, etc.)  
   5 – Remove cryoprotectants (GOL, EDO, MPD, etc.)  
@@ -382,7 +382,7 @@ python PocketMaster.py --config config.yaml
 
 🔹 **Выберите подходящие опции предварительной обработки структур**    
   1 –  Удалить воду (solvent)  
-  2 –  Удалить ионы ( Cu, CL,  и др.)  
+  2 –  Удалить ионы ( Mg²⁺, Cl⁻  и др.)  
   3 –  Удалить сульфаты и фосфаты (SO4, PO4, и др.)  
   4 –  Удалить буферные компоненты (TRS, MES, HEP, и др.)  
   5 –  Удалить криопротектанты (GOL, EDO, MPD, и др.)  
