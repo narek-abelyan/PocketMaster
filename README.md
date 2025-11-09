@@ -148,11 +148,11 @@ to enter interactive mode and set the parameters manually.
   – Enter its number from the provided list  
 
 🔹 **Choose the method for defining the alignment region:**  
-  1 – On the reference structure using a specified residue ID and radius (Å), then search and align in all structures  
-  2 – After preliminary alignment of all structures with each other, define the region around the selected reference residue for each structure  
-  3 – For each structure, around its HET groups within the specified radius (Å)  
-  4 – Using a user-provided list of residues, then search in all structures  
-  5 – On the reference structure using a specified chain ID, then search and align in all structures
+  1 – On reference structure by specified residue ID and radius (Å), then this region is searched for and aligned in all structures.  
+  2 – After preliminary alignment of all structures, for each structure around the selected residue within a given radius (Å).  
+  3 – For each structure around its HET groups within a specified radius (Å).  
+  4 – By user-provided residue list, and then this region is searched for and aligned in all structures.  
+  5 – On reference structure by specified chain identifier, then this region is searched for and aligned in all structures.
 
 ---
 
