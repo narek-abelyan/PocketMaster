@@ -1,4 +1,3 @@
-<!-- google-site-verification: jhI8rrjCXRuoSeMe3vma4A2ZmhqzvbGmeXPkVYRoYWM -->
 ## EN
 
 # 🤖 PocketMaster — Pocket Analyzer
