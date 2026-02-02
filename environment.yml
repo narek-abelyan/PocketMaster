@@ -12,3 +12,5 @@ dependencies:
   - requests
   - scipy
   - pymol
+  - pip:
+      - kneed
